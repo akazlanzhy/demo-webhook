@@ -35,16 +35,16 @@ class EventStore:
         self._events: dict[str, WebhookEvent] = {}
         self._dedup_window = dedup_window_seconds
 
+    def _is_within_dedup_window(self, received_at: float) -> bool:
+        """Check if an event is within the deduplication window."""
+        return time.time() - received_at < self._dedup_window
+
     def is_duplicate(self, event_id: str) -> bool:
         """Check if an event with this ID was already processed recently."""
         if event_id not in self._events:
             return False
         existing = self._events[event_id]
-        # Bug: uses > instead of <, so events within the window are NOT detected as duplicates
-        # and events outside the window ARE detected as duplicates (inverted logic)
-        if time.time() - existing.received_at > self._dedup_window:
-            return True
-        return False
+        return self._is_within_dedup_window(existing.received_at)
 
     def store(self, event: WebhookEvent) -> None:
         """Store an event for deduplication tracking."""
