@@ -4,6 +4,7 @@ from app import (
     calculate_event_stats,
     filter_events_by_repo,
     format_notification,
+    get_latest_event,
     parse_webhook_payload,
 )
 
@@ -58,3 +59,18 @@ def test_filter_events_by_repo():
     filtered = filter_events_by_repo(events, "org/repo1")
     assert len(filtered) == 2
     assert all(e["repository"] == "org/repo1" for e in filtered)
+
+
+def test_get_latest_event():
+    events = [
+        {"sender": "alice", "repository": "org/repo1", "event_type": "opened", "timestamp": "2026-01-03T10:00:00"},
+        {"sender": "bob", "repository": "org/repo1", "event_type": "closed", "timestamp": "2026-01-05T10:00:00"},
+        {"sender": "carol", "repository": "org/repo2", "event_type": "opened", "timestamp": "2026-01-01T10:00:00"},
+    ]
+    latest = get_latest_event(events)
+    assert latest["sender"] == "bob"
+    assert latest["timestamp"] == "2026-01-05T10:00:00"
+
+
+def test_get_latest_event_empty():
+    assert get_latest_event([]) is None

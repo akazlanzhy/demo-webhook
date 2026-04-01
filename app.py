@@ -80,3 +80,18 @@ def filter_events_by_repo(events: list[dict], repo_name: str) -> list[dict]:
         Filtered list of events.
     """
     return [e for e in events if e["repository"] == repo_name]
+
+
+def get_latest_event(events: list[dict]) -> dict | None:
+    """Get the most recent event based on timestamp.
+
+    Args:
+        events: List of parsed event dictionaries.
+
+    Returns:
+        The event with the latest timestamp, or None if empty.
+    """
+    if not events:
+        return None
+
+    return sorted(events, key=lambda e: e["timestamp"])[0]
