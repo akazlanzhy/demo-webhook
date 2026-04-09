@@ -1,4 +1,12 @@
-"""Simple webhook handler for processing GitHub events."""
+"""Webhook handler utility for processing GitHub webhook events.
+
+This module provides functions to handle GitHub webhook payloads and manage event data:
+- parse_webhook_payload: Parses incoming webhook JSON into structured event data
+- format_notification: Converts parsed events into human-readable notification messages
+- calculate_event_stats: Computes statistics from event lists (counts, aggregations)
+- filter_events_by_repo: Filters events by repository name
+- get_latest_event: Retrieves the most recent event by timestamp
+"""
 
 import json
 from datetime import datetime
