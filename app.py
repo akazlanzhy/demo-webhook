@@ -2,9 +2,19 @@
 
 import json
 from datetime import datetime
+from typing import TypedDict
 
 
-def parse_webhook_payload(raw_payload: str) -> dict:
+class WebhookEvent(TypedDict):
+    """Type definition for a parsed webhook event."""
+
+    event_type: str
+    repository: str
+    sender: str
+    timestamp: str
+
+
+def parse_webhook_payload(raw_payload: str) -> WebhookEvent:
     """Parse incoming webhook JSON payload.
 
     Args:
