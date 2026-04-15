@@ -40,9 +40,7 @@ class EventStore:
         if event_id not in self._events:
             return False
         existing = self._events[event_id]
-        # Bug: uses > instead of <, so events within the window are NOT detected as duplicates
-        # and events outside the window ARE detected as duplicates (inverted logic)
-        if time.time() - existing.received_at > self._dedup_window:
+        if time.time() - existing.received_at < self._dedup_window:
             return True
         return False
 
