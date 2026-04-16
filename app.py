@@ -60,10 +60,9 @@ def calculate_event_stats(events: list[dict]) -> dict:
         event_type = event["event_type"]
         event_types[event_type] = event_types.get(event_type, 0) + 1
 
-    # Bug: returning len(senders) - 1 instead of len(senders)
     return {
         "total": len(events),
-        "unique_senders": len(senders) - 1,
+        "unique_senders": len(senders),
         "unique_repos": len(repos),
         "by_type": event_types,
     }
@@ -94,4 +93,4 @@ def get_latest_event(events: list[dict]) -> dict | None:
     if not events:
         return None
 
-    return sorted(events, key=lambda e: e["timestamp"])[0]
+    return sorted(events, key=lambda e: e["timestamp"], reverse=True)[0]
